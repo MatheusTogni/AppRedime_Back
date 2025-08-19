@@ -4,15 +4,13 @@ import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'redime_secret';
 
-export async function loginService(login: any, password: any) {
-  console.log('login',login)
-  console.log('senha',password)
+export async function loginService(login: string, password: string) {
   try {
     const result = await pool.query(
-      'SELECT id, login, senha FROM usuarios WHERE login = $1',
+      'SELECT id, login, senha FROM "USUARIOS" WHERE login = $1',
       [login]
     );
-    
+
     const user = result.rows[0];
     
     const isPasswordValid = await bcrypt.compare(password, user.senha);

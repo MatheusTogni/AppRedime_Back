@@ -12,6 +12,12 @@ export async function loginService(login: string, password: string) {
     );
 
     const user = result.rows[0];
+    if (!user) {
+      return { 
+        success: false, 
+        error: 'Credenciais inválidas.' 
+      };
+    }
     
     const isPasswordValid = await bcrypt.compare(password, user.senha);
     

@@ -9,7 +9,6 @@ interface PostData {
 
 const postsService = {
     async createPost(params: PostData) {
-        console.log('Dados recebidos:', params);
 
         try {
             const client = await pool.connect();

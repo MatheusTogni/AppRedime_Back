@@ -102,6 +102,44 @@ const postsService = {
             console.error('Erro ao buscar posts:', error);
             throw new Error('Erro ao buscar posts do banco de dados');
         }
+    },
+
+    async deletePost(id: number) {
+        try {
+            const client = await pool.connect();
+
+            try {
+                await client.query('BEGIN');
+
+                // Primeiro, deleta as imagens associadas
+                const deleteImagesQuery = `
+                    DELETE FROM "IMAGESXPOSTS" 
+                    WHERE id_post = $1
+                `;
+                await client.query(deleteImagesQuery, [id]);
+
+                // Depois, deleta o post
+                const deletePostQuery = `
+                    DELETE FROM "POSTS" 
+                    WHERE id = $1
+                    RETURNING id, titulo, descricao, criado_em
+                `;
+                const result = await client.query(deletePostQuery, [id]);
+
+                await client.query('COMMIT');
+                return result.rows[0];
+
+            } catch (error) {
+                await client.query('ROLLBACK');
+                throw error;
+            } finally {
+                client.release();
+            }
+
+        } catch (error) {
+            console.error('Erro ao deletar post:', error);
+            throw new Error('Erro ao deletar post do banco de dados');
+        }
     }
 }
 

@@ -50,6 +50,32 @@ const postsController = {
             });
         }
     },
+
+    async deletePost(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const deletedPost = await postsService.deletePost(Number(id));
+            
+            if (!deletedPost) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Post não encontrado'
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'Post deletado com sucesso!',
+                post: deletedPost
+            });
+        } catch (error) {
+            console.error('Erro ao deletar post:', error);
+            res.status(500).json({ 
+                success: false, 
+                message: 'Erro interno do servidor' 
+            });
+        }
+    },
 }
 
 export default postsController;

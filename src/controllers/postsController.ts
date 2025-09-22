@@ -4,16 +4,23 @@ import postsService from '../services/postsService';
 const postsController = {
     async getPosts(req: Request, res: Response) {
         try {
-            const posts = await postsService.getPosts();
+            const { dataInicio, dataFim } = req.query;
+
+            const filters = {
+                dataInicio: dataInicio as string,
+                dataFim: dataFim as string
+            };
+
+            const posts = await postsService.getPosts(filters);
             res.status(200).json({
                 posts: posts,
                 total: posts.length
             });
         } catch (error) {
             console.error('Erro ao buscar posts:', error);
-            res.status(500).json({ 
-                success: false, 
-                message: 'Erro interno do servidor' 
+            res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor'
             });
         }
     },
@@ -21,7 +28,7 @@ const postsController = {
     async createPost(req: Request, res: Response) {
         try {
             const imageUrls: string[] = [];
-            
+
             if (req.files) {
                 if (Array.isArray(req.files)) {
                     for (const file of req.files) {
@@ -35,18 +42,18 @@ const postsController = {
                 ...req.body,
                 images: imageUrls
             };
-            
+
             const result = await postsService.createPost(postData);
-            res.status(200).json({ 
-                success: true, 
+            res.status(200).json({
+                success: true,
                 post: result,
                 imagesUploaded: imageUrls.length
             });
         } catch (error) {
             console.error('Erro ao criar post:', error);
-            res.status(500).json({ 
-                success: false, 
-                message: 'Erro interno do servidor' 
+            res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor'
             });
         }
     },
@@ -55,7 +62,7 @@ const postsController = {
         try {
             const { id } = req.params;
             const deletedPost = await postsService.deletePost(Number(id));
-            
+
             if (!deletedPost) {
                 return res.status(404).json({
                     success: false,
@@ -70,9 +77,9 @@ const postsController = {
             });
         } catch (error) {
             console.error('Erro ao deletar post:', error);
-            res.status(500).json({ 
-                success: false, 
-                message: 'Erro interno do servidor' 
+            res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor'
             });
         }
     },

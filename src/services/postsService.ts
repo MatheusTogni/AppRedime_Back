@@ -7,6 +7,11 @@ interface PostData {
     userId?: number;
 }
 
+interface PostFilters {
+    dataInicio?: string;
+    dataFim?: string;
+}
+
 const postsService = {
     async createPost(params: PostData) {
 
@@ -64,12 +69,12 @@ const postsService = {
         }
     },
 
-    async getPosts() {
+    async getPosts(filters?: PostFilters) {
         try {
             const client = await pool.connect();
 
             try {
-                const query = `
+                let query = `
                     SELECT 
                         p.id,
                         p.titulo,
@@ -87,11 +92,33 @@ const postsService = {
                         ) as images
                     FROM "POSTS" p
                     LEFT JOIN "IMAGESXPOSTS" i ON p.id = i.id_post
+                `;
+
+                const queryParams: any[] = [];
+                const whereConditions: string[] = [];
+
+                // Adiciona filtros de data se fornecidos
+                if (filters?.dataInicio) {
+                    queryParams.push(filters.dataInicio);
+                    whereConditions.push(`DATE(p.criado_em) >= $${queryParams.length}`);
+                }
+
+                if (filters?.dataFim) {
+                    queryParams.push(filters.dataFim);
+                    whereConditions.push(`DATE(p.criado_em) <= $${queryParams.length}`);
+                }
+
+                // Adiciona WHERE se há condições
+                if (whereConditions.length > 0) {
+                    query += ` WHERE ${whereConditions.join(' AND ')}`;
+                }
+
+                query += `
                     GROUP BY p.id, p.titulo, p.descricao, p.criado_em
                     ORDER BY p.criado_em DESC
                 `;
 
-                const result = await client.query(query);
+                const result = await client.query(query, queryParams);
                 return result.rows;
 
             } finally {

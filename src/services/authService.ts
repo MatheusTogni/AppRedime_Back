@@ -4,6 +4,16 @@ import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'redime_secret';
 
+export function verifyToken(token: string): { id: number; login: string } | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; login: string };
+    return decoded;
+  } catch (error) {
+    console.error('Erro ao verificar token:', error);
+    return null;
+  }
+}
+
 export async function loginService(login: string, password: string) {
   try {
     const result = await pool.query(

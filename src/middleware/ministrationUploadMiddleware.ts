@@ -37,13 +37,15 @@ const ministrationFileFilter = (req: any, file: Express.Multer.File, cb: any) =>
   }
 };
 
-// Configuração do multer para ministrações
+const MAX_UPLOAD_SIZE_MB = 50; 
+const maxFileSizeBytes = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
+
 const ministrationUpload = multer({
   storage: ministrationStorage,
   fileFilter: ministrationFileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB máximo para PDFs
-    files: 5 // máximo 5 arquivos por vez
+    fileSize: maxFileSizeBytes, 
+    files: 5 
   }
 });
 

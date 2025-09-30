@@ -34,7 +34,8 @@ class CalendarioService {
 
     async getEventos(filters: EventoFilters = {}) {
         let query = `
-      SELECT * FROM "CALENDARIO"
+      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor
+      FROM "CALENDARIO"
     `;
         const values: any[] = [];
         const conditions: string[] = [];

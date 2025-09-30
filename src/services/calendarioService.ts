@@ -34,7 +34,7 @@ class CalendarioService {
 
     async getEventos(filters: EventoFilters = {}) {
         let query = `
-      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor
+      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_eventoo, cor
       FROM "CALENDARIO"
     `;
         const values: any[] = [];
@@ -84,7 +84,7 @@ class CalendarioService {
 
     async getEventoById(id: number) {
         const query = `
-      SELECT * FROM "CALENDARIO" 
+      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor FROM "CALENDARIO" 
       WHERE id = $1
     `;
 

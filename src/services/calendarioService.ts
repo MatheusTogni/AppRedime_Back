@@ -32,32 +32,32 @@ class CalendarioService {
         return result.rows[0];
     }
 
-    // async getEventos(filters: EventoFilters = {}) {
-    //     let query = `
-    //   SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor
-    //   FROM "CALENDARIO"
-    // `;
-    //     const values: any[] = [];
-    //     const conditions: string[] = [];
+    async getEventos(filters: EventoFilters = {}) {
+        let query = `
+      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor
+      FROM "CALENDARIO"
+    `;
+        const values: any[] = [];
+        const conditions: string[] = [];
 
-    //     if (filters.mes && filters.ano) {
-    //         conditions.push(`EXTRACT(MONTH FROM data_evento) = $${values.length + 1}`);
-    //         values.push(filters.mes);
+        if (filters.mes && filters.ano) {
+            conditions.push(`EXTRACT(MONTH FROM data_evento) = $${values.length + 1}`);
+            values.push(filters.mes);
 
-    //         conditions.push(`EXTRACT(YEAR FROM data_evento) = $${values.length + 1}`);
-    //         values.push(filters.ano);
-    //     }
+            conditions.push(`EXTRACT(YEAR FROM data_evento) = $${values.length + 1}`);
+            values.push(filters.ano);
+        }
 
-    //     if (conditions.length > 0) {
-    //         query += ` WHERE ${conditions.join(' AND ')}`;
-    //     }
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(' AND ')}`;
+        }
 
-    //     query += ` ORDER BY data_evento ASC`;
+        query += ` ORDER BY data_evento ASC`;
 
-    //     const result = await this.db.query(query, values);
-    //     console.log('resultado', result)
-    //     return result.rows;
-    // }
+        const result = await this.db.query(query, values);
+        console.log('resultado', result)
+        return result.rows;
+    }
 
     async updateEvento(id: number, data: EventoData) {
         const query = `

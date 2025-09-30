@@ -35,31 +35,31 @@ class CalendarioController {
         }
     }
 
-    // async getEventos(req: Request, res: Response): Promise<void> {
-    //     try {
-    //         const { mes, ano } = req.query;
+    async getEventos(req: Request, res: Response): Promise<void> {
+        try {
+            const { mes, ano } = req.query;
 
-    //         let filters: any = {};
+            let filters: any = {};
 
-    //         if (mes && ano) {
-    //             filters.mes = parseInt(mes as string);
-    //             filters.ano = parseInt(ano as string);
-    //         }
+            if (mes && ano) {
+                filters.mes = parseInt(mes as string);
+                filters.ano = parseInt(ano as string);
+            }
 
-    //         const eventos = await calendarioService.getEventos(filters);
+            const eventos = await calendarioService.getEventos(filters);
 
-    //         res.status(200).json({
-    //             success: true,
-    //             eventos
-    //         });
-    //     } catch (error) {
-    //         console.error('Erro ao buscar eventos:', error);
-    //         res.status(500).json({
-    //             success: false,
-    //             message: 'Erro interno do servidor'
-    //         });
-    //     }
-    // }
+            res.status(200).json({
+                success: true,
+                eventos
+            });
+        } catch (error) {
+            console.error('Erro ao buscar eventos:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor'
+            });
+        }
+    }
 
     async updateEvento(req: Request, res: Response): Promise<void> {
         try {

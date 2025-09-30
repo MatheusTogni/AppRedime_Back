@@ -34,7 +34,7 @@ class CalendarioService {
 
     async getEventos(filters: EventoFilters = {}) {
         let query = `
-      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_eventoo, cor
+      SELECT id, titulo, descricao, TO_CHAR(data_evento, 'DD/MM/YYYY') AS data_evento, cor
       FROM "CALENDARIO"
     `;
         const values: any[] = [];
@@ -55,6 +55,7 @@ class CalendarioService {
         query += ` ORDER BY data_evento ASC`;
 
         const result = await this.db.query(query, values);
+        console.log('resultado', result)
         return result.rows;
     }
 

@@ -21,13 +21,15 @@ class CalendarioService {
     }
 
     async createEvento(data: EventoData) {
+        const formattedDate = data.data_evento.split('/').reverse().join('-'); // Converte dd/mm/yyyy para yyyy-mm-dd
+
         const query = `
       INSERT INTO "CALENDARIO" (titulo, descricao, data_evento, cor)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
 
-        const values = [data.titulo, data.descricao, data.data_evento, data.cor];
+        const values = [data.titulo, data.descricao, formattedDate, data.cor];
         const result = await this.db.query(query, values);
         return result.rows[0];
     }

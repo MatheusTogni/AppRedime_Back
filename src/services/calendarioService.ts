@@ -57,7 +57,6 @@ class CalendarioService {
         query += ` ORDER BY data_evento ASC`;
 
         const result = await this.db.query(query, values);
-        console.log('resultado', result)
         return result.rows;
     }
 

@@ -7,15 +7,33 @@ import authRouter from './routers/authRouter';
 import postagensRouter from './routers/postsRouter'
 import ministrationRouter from './routers/ministrationRouter';
 import calendarioRouter from './routers/calendarioRouter';
+import bibleRouter from './routers/bibleRouter';
 import { authenticateToken } from './middleware/authMiddleware';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Configuração CORS mais permissiva para desenvolvimento
+const allowedOrigins = [
+  'https://missaoredimepzo.com',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'http://10.0.0.138:3001', // IP local da rede
+];
+
 app.use(cors({
-  origin: ['https://missaoredimepzo.com'],
+  origin: (origin, callback) => {
+    // Permite requisições sem origin (como mobile apps, Postman, etc) ou origins permitidas
+    if (!origin || allowedOrigins.includes(origin) || origin.match(/^http:\/\/localhost:\d+$/) || origin.match(/^http:\/\/127\.0\.0\.1:\d+$/) || origin.match(/^http:\/\/10\.0\.0\.\d+:\d+$/)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Não permitido pelo CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -28,6 +46,7 @@ app.use('/auth', authRouter);
 app.use('/post', postagensRouter);
 app.use('/ministration', ministrationRouter);
 app.use('/calendario', calendarioRouter);
+app.use('/bible', bibleRouter);
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);

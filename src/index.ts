@@ -7,7 +7,6 @@ import authRouter from './routers/authRouter';
 import postagensRouter from './routers/postsRouter'
 import ministrationRouter from './routers/ministrationRouter';
 import calendarioRouter from './routers/calendarioRouter';
-import bibleRouter from './routers/bibleRouter';
 import { authenticateToken } from './middleware/authMiddleware';
 
 const app = express();
@@ -46,7 +45,6 @@ app.use('/auth', authRouter);
 app.use('/post', postagensRouter);
 app.use('/ministration', ministrationRouter);
 app.use('/calendario', calendarioRouter);
-app.use('/bible', bibleRouter);
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
